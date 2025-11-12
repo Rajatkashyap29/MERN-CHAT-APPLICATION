@@ -1,0 +1,16 @@
+{
+  "name": "baatchit",
+  "version": "1.0.0",
+  "description": "real time chat application using mern stack and websocket",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon backend/server.js"
+  },
+  "author": "Rajat kashyap",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
+  }
+}
