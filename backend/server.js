@@ -1,9 +1,11 @@
 const express = require('express');
 const { chats } = require('./data/data');
 const dotenv = require('dotenv');
+const connectDB = require('./config/db');
 
 const app = express();
 dotenv.config();
+connectDB();
 
 // Default route
 app.get('/', (req, res) => {
@@ -20,7 +22,6 @@ app.get('/api/chat/:id', (req, res) => {
   const singleChat = chats.filter((c) => c._id === req.params.id);
   res.send(singleChat);
 });
-
 
 const PORT = process.env.PORT || 5000;
 
