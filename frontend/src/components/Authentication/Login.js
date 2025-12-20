@@ -9,18 +9,22 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
   const handleClick = () => setShow(!show);
 
   const toast = useToast();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   // 🔥 Validation + Toast
-  const submitHandler = () => {
+  const submitHandler = async() => {
+    setLoading(true);
     if (!email || !password) {
       toast({
         title: "Please fill all the fields!",
@@ -29,17 +33,51 @@ const Login = () => {
         isClosable: true,
         position: "bottom",
       });
+      setLoading(false);
       return;
     }
 
-    toast({
+    try {
+      const config = {
+      headers : {
+	   'Content-type':'application/json'
+      }
+      }
+      const data = {
+        "email": email,
+        "password":password
+      }
+      const res = await axios.post("/api/user/login", data, config);  
+
+      toast({
       title: "Login Successful 😎",
       status: "success",
       duration: 4000,
       isClosable: true,
       position: "bottom",
-    });
+      });
+      setLoading(false);
+
+      localStorage.setItem("userInfo", JSON.stringify(res));
+      navigate("/chats");
+      
+
+    } catch (err) {
+      toast({
+        title: "SomeThing went Wrong!!",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+    }
+
   };
+
+
+
+
 
   return (
     <VStack spacing="10px">
@@ -81,6 +119,8 @@ const Login = () => {
         width="100%"
         style={{ marginTop: 15 }}
         onClick={submitHandler}
+        isLoading={loading}
+        
       >
         Login
       </Button>
